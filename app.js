@@ -84,9 +84,16 @@ function hero() {
   return `
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> Round of 32 · Matchday 4</p>
-        <h1>The bracket is<br><em>heating up.</em></h1>
-        <p>One match left in the round. See where everyone stands before the knockout points start climbing.</p>
+        <p class="eyebrow"><span></span> Cape Verde crew · Round of 32</p>
+        <h1>Island pride.<br><em>Bracket pressure.</em></h1>
+        <p>Six entries in shark-infested waters. See where everyone stands before the knockout points start climbing.</p>
+      </div>
+      <div class="hero-sharks" aria-hidden="true">
+        <svg viewBox="0 0 560 240" role="presentation">
+          <path d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
+          <path class="small-shark" d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
+          <circle cx="480" cy="55" r="5" /><circle cx="510" cy="32" r="3" /><circle cx="532" cy="58" r="2" />
+        </svg>
       </div>
       <div class="hero-stats" aria-label="Pool summary">
         <div><strong>6</strong><span>Entries</span></div>
@@ -138,7 +145,7 @@ function liveMatchPanel() {
   return `
     <section class="live-card">
       <div class="live-card-top">
-        <span class="live-pill"><i></i> Live snapshot</span>
+        <span class="live-pill"><i></i> Shark watch · Live snapshot</span>
         <span>${formatDate(match.date)} · Round of 32</span>
       </div>
       <div class="matchup">
