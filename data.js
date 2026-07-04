@@ -14,8 +14,7 @@ export const poolData = {
   notes: [
     "Otis & Tyler are now scored straight up with the rest of the group.",
     "The Round of 32 is complete.",
-    "Colombia is recorded as the winner over Ghana.",
-    "Everyone picked Colombia and received 1 point.",
+    "All recorded Round of 32 results are final.",
   ],
 
   matches: [

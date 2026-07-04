@@ -178,7 +178,11 @@ button { color: inherit; }
   transform: rotate(-4deg);
   pointer-events: none;
 }
-.hero-sharks svg { display: block; width: 100%; overflow: visible; fill: currentColor; }
+.hero-sharks svg { display: block; width: 100%; overflow: visible; }
+.hero-sharks .shark-fill { fill: currentColor; }
+.hero-sharks .shark-belly { fill: rgba(7, 21, 28, .28); }
+.hero-sharks .shark-eye { fill: var(--ink); stroke: var(--green-bright); stroke-width: 2px; }
+.hero-sharks .shark-detail { fill: none; stroke: var(--ink); stroke-width: 3px; stroke-linecap: round; opacity: .72; }
 .hero-sharks .small-shark { opacity: .68; }
 .hero-sharks .tiny-shark { opacity: .40; }
 .hero-sharks circle { fill: none; stroke: currentColor; stroke-width: 3px; }
@@ -355,11 +359,9 @@ button { color: inherit; }
 .matches-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
 .match-card { padding: 19px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255, 255, 255, .82); animation: rise .35s ease both; animation-delay: var(--delay); }
 @keyframes rise { from { opacity: 0; transform: translateY(7px); } }
-.match-card.pending { border-color: #e6c234; background: #fff9dc; }
 .match-meta { display: flex; justify-content: space-between; margin-bottom: 16px; color: #8b9792; font-size: 8px; letter-spacing: .08em; text-transform: uppercase; }
 .match-status { font-weight: 800; }
 .match-status.final { color: var(--green); }
-.match-status.pending { color: #be7c16; }
 .match-team { display: flex; align-items: center; justify-content: space-between; min-height: 34px; color: #68756f; font-size: 11px; }
 .match-team span { display: flex; align-items: center; gap: 8px; }
 .match-team strong { font-family: Georgia, serif; color: var(--ink); font-size: 18px; font-weight: 500; }
@@ -395,7 +397,6 @@ button { color: inherit; }
 .pick .flag { width: 14px; height: 10px; }
 .pick.correct { background: #d8f1f4; color: #075d6d; }
 .pick.wrong { background: #f5dfdc; color: #a94536; }
-.pick.open { background: #f7f1d4; color: #8c6c1e; }
 .pick i { font-style: normal; font-size: 9px; }
 
 .champion-strip { margin-top: 20px; padding: 27px; color: white; background: var(--ink); display: grid; grid-template-columns: 200px 1fr; gap: 20px; }

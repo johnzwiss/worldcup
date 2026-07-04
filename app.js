@@ -1,4 +1,4 @@
-import { poolData } from "./data.js";
+import { poolData } from "./data.js?v=20260703-2";
 
 const app = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".nav-link")];
@@ -37,14 +37,9 @@ function formatDate(dateString, full = false) {
   }).format(date);
 }
 
-function resultFor(match) {
-  return match.status === "final" ? match.winner : null;
-}
-
 function playerScore(player) {
   return poolData.matches.reduce((score, match, index) => {
-    const result = resultFor(match);
-    return score + (result && player.roundOf32Picks[index] === result ? match.points : 0);
+    return score + (player.roundOf32Picks[index] === match.winner ? match.points : 0);
   }, 0);
 }
 
@@ -71,10 +66,22 @@ function hero() {
         <p>Six entries. One leaderboard. Nobody wants to be chum when the knockout points start climbing.</p>
       </div>
       <div class="hero-sharks" aria-hidden="true">
-        <svg viewBox="0 0 560 240" role="presentation">
-          <path d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
-          <path class="small-shark" transform="translate(250 110) scale(.42)" d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
-          <path class="tiny-shark" transform="translate(-80 135) scale(.28)" d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
+        <svg viewBox="0 0 620 260" role="presentation">
+          <defs>
+            <g id="shark-profile">
+              <path class="shark-fill" d="M114 126C177 79 276 63 384 73c68 6 126 25 174 53-38 31-94 49-166 57-108 13-208-3-278-38Z" />
+              <path class="shark-fill" d="m120 128-83-61 30 59-31 72 86-51Z" />
+              <path class="shark-fill" d="m265 75 65-63-20 66Z" />
+              <path class="shark-fill" d="m342 178-72 61 105-57Z" />
+              <path class="shark-fill" d="m205 176-37 37 64-33Z" />
+              <path class="shark-belly" d="M118 145c80 36 177 49 274 38 72-8 128-26 166-57-53 18-108 28-165 31-104 7-195 1-275-12Z" />
+              <circle class="shark-eye" cx="475" cy="109" r="5" />
+              <path class="shark-detail" d="M448 112q-13 18 0 39M462 113q-12 17 0 35M477 145q31 5 58-9" />
+            </g>
+          </defs>
+          <use href="#shark-profile" class="main-shark" />
+          <use href="#shark-profile" class="small-shark" transform="translate(300 145) scale(.38)" />
+          <use href="#shark-profile" class="tiny-shark" transform="translate(-80 168) scale(.25)" />
           <circle cx="480" cy="55" r="5" /><circle cx="510" cy="32" r="3" /><circle cx="532" cy="58" r="2" />
         </svg>
       </div>
@@ -121,27 +128,6 @@ function leaderboardPanel() {
   `;
 }
 
-function roundCompletePanel() {
-  return `
-    <section class="live-card round-complete-card">
-      <div class="live-card-top">
-        <span class="live-pill"><i></i> Waters settled</span>
-        <span>Round of 32</span>
-      </div>
-      <div class="round-lock">
-        <strong>16<small>/16</small></strong>
-        <div><h3>Round locked.</h3><p>Colombia advances. Every score is updated.</p></div>
-      </div>
-      <div class="consensus">
-        <div class="mini-avatars">
-          ${poolData.players.map((player) => `<span title="${player.name}">${initials(player.name)}</span>`).join("")}
-        </div>
-        <p><strong>Clean sweep.</strong> All 6 entries backed Colombia.</p>
-      </div>
-    </section>
-  `;
-}
-
 function scoringPanel() {
   const labels = {
     roundOf32: "Round of 32",
@@ -178,7 +164,6 @@ function overviewView() {
     <div class="dashboard-grid">
       ${leaderboardPanel()}
       <div class="side-stack">
-        ${roundCompletePanel()}
         ${scoringPanel()}
       </div>
     </div>
@@ -198,10 +183,10 @@ function matchesView() {
     const homeWon = match.winner === home;
     const awayWon = match.winner === away;
     return `
-      <article class="match-card ${match.status === "pending" ? "pending" : ""}" style="--delay:${index * 25}ms">
+      <article class="match-card" style="--delay:${index * 25}ms">
         <div class="match-meta">
           <span>${formatDate(match.date)}</span>
-          <span class="match-status ${match.status}">${match.status === "final" ? "Final" : "Pending"}</span>
+          <span class="match-status final">Final</span>
         </div>
         <div class="match-team ${homeWon ? "winner" : ""}">
           <span>${flag(home)} ${home}</span>
@@ -244,9 +229,8 @@ function picksView() {
         </th>
         ${players.map((player) => {
           const pick = player.roundOf32Picks[matchIndex];
-          const result = resultFor(match);
-          const status = !result ? "open" : pick === result ? "correct" : "wrong";
-          return `<td><span class="pick ${status}">${flag(pick)} ${pick}${status === "correct" ? " <i>✓</i>" : status === "wrong" ? " <i>×</i>" : ""}</span></td>`;
+          const status = pick === match.winner ? "correct" : "wrong";
+          return `<td><span class="pick ${status}">${flag(pick)} ${pick}${status === "correct" ? " <i>✓</i>" : " <i>×</i>"}</span></td>`;
         }).join("")}
       </tr>
     `;
