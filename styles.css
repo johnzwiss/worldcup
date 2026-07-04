@@ -167,26 +167,33 @@ button { color: inherit; }
   pointer-events: none;
 }
 .hero-copy, .hero-stats { position: relative; z-index: 2; }
+.hero-copy { max-width: 62%; }
 .hero-sharks {
   position: absolute;
   z-index: 1;
-  right: 18%;
+  right: 4%;
   top: 34px;
   width: min(40vw, 540px);
+  height: 230px;
   color: var(--green-bright);
   opacity: .52;
   transform: rotate(-4deg);
   pointer-events: none;
 }
-.hero-sharks svg { display: block; width: 100%; overflow: visible; }
-.hero-sharks use { color: currentColor; fill: currentColor; }
-.hero-sharks .shark-fill { fill: currentColor; }
-.hero-sharks .shark-belly { fill: rgba(7, 21, 28, .28); }
-.hero-sharks .shark-eye { fill: var(--ink); stroke: var(--green-bright); stroke-width: 2px; }
-.hero-sharks .shark-detail { fill: none; stroke: var(--ink); stroke-width: 3px; stroke-linecap: round; opacity: .72; }
-.hero-sharks .small-shark { opacity: .68; }
-.hero-sharks .tiny-shark { opacity: .40; }
-.hero-sharks circle { fill: none; stroke: currentColor; stroke-width: 3px; }
+.hero-sharks .shark {
+  position: absolute;
+  display: block;
+  background: currentColor;
+  -webkit-mask: url("./assets/shark-silhouette.png?v=20260703-4") center / contain no-repeat;
+  mask: url("./assets/shark-silhouette.png?v=20260703-4") center / contain no-repeat;
+}
+.hero-sharks .main-shark { inset: 0; }
+.hero-sharks .small-shark { width: 43%; height: 43%; right: -8%; bottom: -65px; opacity: .60; transform: scaleX(-1) rotate(-7deg); }
+.hero-sharks .tiny-shark { width: 27%; height: 27%; left: 2%; bottom: -50px; opacity: .38; transform: rotate(6deg); }
+.hero-sharks .bubble { position: absolute; border: 3px solid currentColor; border-radius: 50%; }
+.hero-sharks .bubble-one { width: 13px; height: 13px; right: 5%; top: 7px; }
+.hero-sharks .bubble-two { width: 7px; height: 7px; right: 0; top: 40px; }
+.hero-sharks .bubble-three { width: 4px; height: 4px; right: 9%; top: -12px; }
 
 .eyebrow, .section-kicker {
   margin: 0 0 14px;
@@ -420,6 +427,7 @@ button { color: inherit; }
   .nav-link.active, .nav-link:hover { color: white; }
   .header-status { display: none; }
   .hero { min-height: 390px; }
+  .hero-copy { max-width: 100%; }
   .hero-stats { display: none; }
   .dashboard-grid { grid-template-columns: 1.2fr .8fr; }
   .leaderboard-heading { display: block; }

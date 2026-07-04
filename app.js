@@ -1,4 +1,4 @@
-import { poolData } from "./data.js?v=20260703-3";
+import { poolData } from "./data.js?v=20260703-4";
 
 const app = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".nav-link")];
@@ -61,29 +61,15 @@ function hero() {
   return `
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> The Shark Pool · Round of 32 complete</p>
-        <h1>There’s blood<br><em>in the water.</em></h1>
-        <p>Six entries. One leaderboard. Nobody wants to be chum when the knockout points start climbing.</p>
+        <p class="eyebrow"><span></span> World Cup 2026 · Family bracket pool</p>
+        <h1>World Cup<br><em>Bracket Pool.</em></h1>
+        <p>Follow the standings, match results, and everyone’s picks throughout the tournament.</p>
       </div>
       <div class="hero-sharks" aria-hidden="true">
-        <svg viewBox="0 0 620 260" role="presentation">
-          <defs>
-            <g id="shark-profile">
-              <path class="shark-fill" d="M114 126C177 79 276 63 384 73c68 6 126 25 174 53-38 31-94 49-166 57-108 13-208-3-278-38Z" />
-              <path class="shark-fill" d="m120 128-83-61 30 59-31 72 86-51Z" />
-              <path class="shark-fill" d="m265 75 65-63-20 66Z" />
-              <path class="shark-fill" d="m342 178-72 61 105-57Z" />
-              <path class="shark-fill" d="m205 176-37 37 64-33Z" />
-              <path class="shark-belly" d="M118 145c80 36 177 49 274 38 72-8 128-26 166-57-53 18-108 28-165 31-104 7-195 1-275-12Z" />
-              <circle class="shark-eye" cx="475" cy="109" r="5" />
-              <path class="shark-detail" d="M448 112q-13 18 0 39M462 113q-12 17 0 35M477 145q31 5 58-9" />
-            </g>
-          </defs>
-          <use href="#shark-profile" class="main-shark" />
-          <use href="#shark-profile" class="small-shark" transform="translate(300 145) scale(.38)" />
-          <use href="#shark-profile" class="tiny-shark" transform="translate(-80 168) scale(.25)" />
-          <circle cx="480" cy="55" r="5" /><circle cx="510" cy="32" r="3" /><circle cx="532" cy="58" r="2" />
-        </svg>
+        <span class="shark main-shark"></span>
+        <span class="shark small-shark"></span>
+        <span class="shark tiny-shark"></span>
+        <i class="bubble bubble-one"></i><i class="bubble bubble-two"></i><i class="bubble bubble-three"></i>
       </div>
       <div class="hero-stats" aria-label="Pool summary">
         <div><strong>6</strong><span>Entries</span></div>
@@ -118,7 +104,7 @@ function leaderboardPanel() {
     <section class="panel leaderboard-panel">
       <div class="panel-heading leaderboard-heading">
         <div>
-          <p class="section-kicker">Feeding order</p>
+          <p class="section-kicker">Standings</p>
           <h2>${scenarioLabel()}</h2>
         </div>
       </div>
@@ -141,8 +127,8 @@ function scoringPanel() {
     <section class="panel scoring-panel">
       <div class="panel-heading">
         <div>
-          <p class="section-kicker">Bite value</p>
-          <h2>The bites get bigger</h2>
+          <p class="section-kicker">Scoring</p>
+          <h2>Points by round</h2>
         </div>
       </div>
       <div class="scoring-steps">
@@ -169,7 +155,7 @@ function overviewView() {
     </div>
     <section class="callout">
       <span class="callout-icon">i</span>
-      <div><strong>Next feeding</strong><p>The Round of 16 is up next and worth 2 points per correct pick.</p></div>
+      <div><strong>Up next</strong><p>The Round of 16 is worth 2 points per correct pick.</p></div>
     </section>
   `;
 }
@@ -206,7 +192,7 @@ function matchesView() {
 
   return `
     <section class="page-intro">
-      <div><p class="eyebrow"><span></span> Shark watch · Round of 32</p><h1>Match center</h1><p>Every result, plus how the room picked it.</p></div>
+      <div><p class="eyebrow"><span></span> Round of 32</p><h1>Match center</h1><p>Results and picks for every match.</p></div>
       <div class="filter-control" role="group" aria-label="Filter matches">
         ${["all", "final"].map((filter) => `<button class="${state.matchFilter === filter ? "active" : ""}" data-filter="${filter}">${filter[0].toUpperCase() + filter.slice(1)}</button>`).join("")}
       </div>
@@ -238,7 +224,7 @@ function picksView() {
 
   return `
     <section class="page-intro picks-intro">
-      <div><p class="eyebrow"><span></span> Head to head</p><h1>All picks</h1><p>Correct picks are green. Misses are red. Simple, brutal, beautiful.</p></div>
+      <div><p class="eyebrow"><span></span> Player picks</p><h1>All picks</h1><p>Compare each entry across the bracket.</p></div>
     </section>
     <div class="player-filter" role="group" aria-label="Filter by entry">
       <button class="${state.selectedPlayer === "all" ? "active" : ""}" data-player="all">Everyone</button>
