@@ -174,11 +174,12 @@ button { color: inherit; }
   top: 34px;
   width: min(40vw, 540px);
   color: var(--green-bright);
-  opacity: .29;
+  opacity: .52;
   transform: rotate(-4deg);
   pointer-events: none;
 }
 .hero-sharks svg { display: block; width: 100%; overflow: visible; }
+.hero-sharks use { color: currentColor; fill: currentColor; }
 .hero-sharks .shark-fill { fill: currentColor; }
 .hero-sharks .shark-belly { fill: rgba(7, 21, 28, .28); }
 .hero-sharks .shark-eye { fill: var(--ink); stroke: var(--green-bright); stroke-width: 2px; }

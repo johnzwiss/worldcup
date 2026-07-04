@@ -1,4 +1,4 @@
-import { poolData } from "./data.js?v=20260703-2";
+import { poolData } from "./data.js?v=20260703-3";
 
 const app = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".nav-link")];
