@@ -5,9 +5,10 @@ export const poolData = {
   scoring: {
     roundOf32: 1,
     roundOf16: 2,
-    quarterfinal: 4,
-    semifinal: 8,
-    final: 16,
+    quarterfinal: 3,
+    semifinal: 4,
+    final: 5,
+    thirdPlace: 3,
   },
 
   notes: [

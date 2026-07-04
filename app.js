@@ -172,6 +172,7 @@ function scoringPanel() {
     quarterfinal: "Quarterfinals",
     semifinal: "Semifinals",
     final: "Final",
+    thirdPlace: "3rd Place",
   };
   return `
     <section class="panel scoring-panel">
@@ -183,9 +184,9 @@ function scoringPanel() {
       </div>
       <div class="scoring-steps">
         ${Object.entries(poolData.scoring).map(([round, points], index) => `
-          <div class="scoring-step ${index === 0 ? "current" : ""}">
+          <div class="scoring-step ${index === 0 ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
             <span>${labels[round]}</span>
-            <strong>${points}</strong>
+            <strong>${round === "thirdPlace" ? "+" : ""}${points}</strong>
             <small>${points === 1 ? "point" : "points"}</small>
           </div>
         `).join("")}
