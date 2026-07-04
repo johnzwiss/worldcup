@@ -184,8 +184,8 @@ button { color: inherit; }
   position: absolute;
   display: block;
   background: currentColor;
-  -webkit-mask: url("./assets/shark-silhouette.png?v=20260703-4") center / contain no-repeat;
-  mask: url("./assets/shark-silhouette.png?v=20260703-4") center / contain no-repeat;
+  -webkit-mask: url("./assets/shark-silhouette.png?v=20260703-5") center / contain no-repeat;
+  mask: url("./assets/shark-silhouette.png?v=20260703-5") center / contain no-repeat;
 }
 .hero-sharks .main-shark { inset: 0; }
 .hero-sharks .small-shark { width: 43%; height: 43%; right: -8%; bottom: -65px; opacity: .60; transform: scaleX(-1) rotate(-7deg); }
@@ -383,9 +383,10 @@ button { color: inherit; }
 .match-foot .flag { width: 15px; height: 10px; }
 
 .picks-intro .scenario-control { flex-shrink: 0; }
+.round-filter { display: flex; gap: 7px; margin-bottom: 10px; padding-bottom: 5px; overflow-x: auto; }
 .player-filter { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 15px; }
-.player-filter button { appearance: none; border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 8px 13px; color: var(--muted); cursor: pointer; font-size: 9px; font-weight: 750; }
-.player-filter button.active { background: var(--ink); border-color: var(--ink); color: white; }
+.round-filter button, .player-filter button { appearance: none; border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 8px 13px; color: var(--muted); cursor: pointer; font-size: 9px; font-weight: 750; white-space: nowrap; }
+.round-filter button.active, .player-filter button.active { background: var(--ink); border-color: var(--ink); color: white; }
 .picks-table-wrap { overflow-x: auto; }
 .picks-table { width: 100%; border-collapse: collapse; min-width: 980px; }
 .picks-table th, .picks-table td { border-bottom: 1px solid #e2e8f1; }
@@ -405,7 +406,33 @@ button { color: inherit; }
 .pick .flag { width: 14px; height: 10px; }
 .pick.correct { background: #d8f1f4; color: #075d6d; }
 .pick.wrong { background: #f5dfdc; color: #a94536; }
+.pick.saved { background: #e1eef0; color: #164f5b; }
+.pick-empty { color: #78888d; font-weight: 600; }
+.pick-pair { min-width: 124px; flex-direction: column; gap: 4px; }
+.pick-pair > span, .pick-pair small { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.pick-pair small { color: #647b81; font-size: 7px; font-weight: 600; }
+.pick-pair small .flag { width: 12px; height: 8px; }
 .pick i { font-style: normal; font-size: 9px; }
+
+.player-picks-profile { padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.72); box-shadow: var(--shadow); }
+.player-profile-heading { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.player-profile-heading > .avatar { width: 46px; height: 46px; display: grid; place-items: center; flex-shrink: 0; font-size: 10px; }
+.player-profile-heading h2 { margin: 2px 0 0; font-family: Georgia, serif; font-size: 31px; font-weight: 500; }
+.profile-score { margin-left: auto; text-align: right; }
+.profile-score strong { display: block; font-family: Georgia, serif; font-size: 30px; font-weight: 500; line-height: 1; }
+.profile-score small { color: var(--muted); font-size: 7px; text-transform: uppercase; letter-spacing: .1em; }
+.player-rounds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.player-round-card { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: rgba(250,253,254,.82); }
+.player-round-card.wide { grid-column: 1 / -1; }
+.player-round-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+.player-round-heading h2 { margin: 0; font-family: Georgia, serif; font-size: 21px; font-weight: 500; }
+.player-round-heading span { color: var(--muted); font-size: 7px; text-transform: uppercase; letter-spacing: .08em; }
+.player-pick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 8px; }
+.profile-pick { min-height: 84px; padding: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; border-radius: 10px; background: #edf3f4; }
+.profile-pick-match { display: flex; align-items: flex-start; gap: 7px; }
+.profile-pick-match > span { color: #789098; font-family: Georgia, serif; font-size: 9px; font-style: italic; }
+.profile-pick-match p { margin: 0; color: #6c7e84; font-size: 8px; line-height: 1.35; }
+.profile-pick > .pick { align-self: flex-start; min-width: 0; }
 
 .champion-strip { margin-top: 20px; padding: 27px; color: white; background: var(--ink); display: grid; grid-template-columns: 200px 1fr; gap: 20px; }
 .champion-strip .section-kicker { color: var(--green-bright); }
@@ -445,6 +472,8 @@ button { color: inherit; }
   .scoring-step strong { font-size: 18px; }
   .matches-grid { grid-template-columns: repeat(2, 1fr); }
   .champion-strip { grid-template-columns: 1fr; }
+  .player-rounds { grid-template-columns: 1fr; }
+  .player-round-card.wide { grid-column: auto; }
 }
 
 @media (max-width: 600px) {
@@ -472,6 +501,9 @@ button { color: inherit; }
   .page-intro .filter-control, .picks-intro .scenario-control { margin-top: 28px; width: max-content; }
   .matches-grid { grid-template-columns: 1fr; }
   .champion-grid { grid-template-columns: 1fr 1fr; }
+  .player-picks-profile { padding: 20px 15px; }
+  .player-profile-heading h2 { font-size: 26px; }
+  .player-pick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .callout { align-items: flex-start; }
   .callout p { line-height: 1.5; }
   .site-footer { display: block; line-height: 2; }

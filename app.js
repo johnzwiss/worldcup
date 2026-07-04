@@ -1,4 +1,4 @@
-import { poolData } from "./data.js?v=20260703-4";
+import { poolData } from "./data.js?v=20260703-5";
 
 const app = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".nav-link")];
@@ -7,7 +7,17 @@ const state = {
   view: "overview",
   matchFilter: "all",
   selectedPlayer: "all",
+  pickRound: "roundOf16",
 };
+
+const pickRounds = [
+  { key: "roundOf32", label: "Round of 32" },
+  { key: "roundOf16", label: "Round of 16" },
+  { key: "quarterfinals", label: "Quarterfinals" },
+  { key: "semifinals", label: "Semifinals" },
+  { key: "thirdPlace", label: "Third Place" },
+  { key: "final", label: "Final" },
+];
 
 const flagCodes = {
   Germany: "de", Paraguay: "py", France: "fr", Sweden: "se", "South Africa": "za",
@@ -38,9 +48,14 @@ function formatDate(dateString, full = false) {
 }
 
 function playerScore(player) {
-  return poolData.matches.reduce((score, match, index) => {
+  const roundOf32Score = poolData.matches.reduce((score, match, index) => {
     return score + (player.roundOf32Picks[index] === match.winner ? match.points : 0);
   }, 0);
+  const laterRoundScore = poolData.laterRoundMatches.reduce((score, match) => {
+    const pick = poolData.laterRoundPicks[player.name]?.[match.roundKey]?.[match.id];
+    return score + (match.winner && pick === match.winner ? match.points : 0);
+  }, 0);
+  return roundOf32Score + laterRoundScore;
 }
 
 function leaderboard() {
@@ -133,7 +148,7 @@ function scoringPanel() {
       </div>
       <div class="scoring-steps">
         ${Object.entries(poolData.scoring).map(([round, points], index) => `
-          <div class="scoring-step ${index === 0 ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
+          <div class="scoring-step ${index === 1 ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
             <span>${labels[round]}</span>
             <strong>${round === "thirdPlace" ? "+" : ""}${points}</strong>
             <small>${points === 1 ? "point" : "points"}</small>
@@ -185,7 +200,7 @@ function matchesView() {
         <div class="pick-bar" aria-label="${picksForHome} picks for ${home}, ${picksForAway} picks for ${away}">
           <span style="width:${picksForHome / 6 * 100}%"></span>
         </div>
-        <p class="match-foot">${match.status === "final" ? `${flag(match.winner)} ${match.winner} advances` : "1 point still available"}</p>
+        <p class="match-foot">${flag(match.winner)} ${match.winner} advances</p>
       </article>
     `;
   }).join("");
@@ -201,22 +216,85 @@ function matchesView() {
   `;
 }
 
+function matchesForPickRound(roundKey) {
+  return roundKey === "roundOf32"
+    ? poolData.matches
+    : poolData.laterRoundMatches.filter((match) => match.roundKey === roundKey);
+}
+
+function pickMarkup(player, roundKey, match, matchIndex) {
+  if (roundKey === "roundOf32") {
+    const pick = player.roundOf32Picks[matchIndex];
+    const status = pick === match.winner ? "correct" : "wrong";
+    return `<span class="pick ${status}">${flag(pick)} ${pick}${status === "correct" ? " <i>✓</i>" : " <i>×</i>"}</span>`;
+  }
+
+  const roundPicks = poolData.laterRoundPicks[player.name]?.[roundKey];
+  const pick = roundPicks?.[match.id];
+  const runnerUp = roundPicks?.runnerUp;
+  if (!pick) {
+    return `<span class="pick saved pick-empty" title="${roundPicks?.note || "Not provided"}">Not provided</span>`;
+  }
+  if ((roundKey === "final" || roundKey === "thirdPlace") && runnerUp) {
+    return `<span class="pick saved pick-pair"><span>${flag(pick)} ${pick}</span><small>over ${flag(runnerUp)} ${runnerUp}</small></span>`;
+  }
+  return `<span class="pick saved">${flag(pick)} ${pick}</span>`;
+}
+
+function playerPicksProfile(player) {
+  const roundSections = pickRounds.map((round) => {
+    const matches = matchesForPickRound(round.key);
+    return `
+      <section class="player-round-card ${matches.length > 2 ? "wide" : ""}">
+        <div class="player-round-heading">
+          <h2>${round.label}</h2>
+          <span>${matches.length} ${matches.length === 1 ? "pick" : "picks"}</span>
+        </div>
+        <div class="player-pick-grid">
+          ${matches.map((match, matchIndex) => {
+            const matchNumber = round.key === "roundOf32" ? String(matchIndex + 1).padStart(2, "0") : match.id.replace("match-", "");
+            return `
+              <article class="profile-pick">
+                <div class="profile-pick-match"><span>${matchNumber}</span><p>${match.fixture}</p></div>
+                ${pickMarkup(player, round.key, match, matchIndex)}
+              </article>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    `;
+  }).join("");
+
+  return `
+    <section class="player-picks-profile">
+      <div class="player-profile-heading">
+        <span class="avatar">${initials(player.name)}</span>
+        <div><p class="section-kicker">Complete pick sheet</p><h2>${player.name}</h2></div>
+        <span class="profile-score"><strong>${playerScore(player)}</strong><small>points</small></span>
+      </div>
+      <div class="player-rounds">${roundSections}</div>
+    </section>
+  `;
+}
+
 function picksView() {
   const playerOptions = poolData.players.map((player) => `<button class="${state.selectedPlayer === player.name ? "active" : ""}" data-player="${player.name}">${player.name}</button>`).join("");
   const players = state.selectedPlayer === "all" ? poolData.players : poolData.players.filter((player) => player.name === state.selectedPlayer);
+  const selectedPlayer = state.selectedPlayer === "all" ? null : players[0];
+  const isRoundOf32 = state.pickRound === "roundOf32";
+  const roundMatches = matchesForPickRound(state.pickRound);
 
-  const rows = poolData.matches.map((match, matchIndex) => {
+  const rows = roundMatches.map((match, matchIndex) => {
     const [home, away] = match.fixture.split(" vs ");
+    const matchNumber = isRoundOf32 ? String(matchIndex + 1).padStart(2, "0") : match.id.replace("match-", "");
     return `
       <tr>
         <th scope="row">
-          <span class="fixture-number">${String(matchIndex + 1).padStart(2, "0")}</span>
-          <span><strong>${home}</strong><small>vs ${away}</small></span>
+          <span class="fixture-number">${matchNumber}</span>
+          <span><strong>${home}</strong><small>${away ? `vs ${away}` : match.round}</small></span>
         </th>
         ${players.map((player) => {
-          const pick = player.roundOf32Picks[matchIndex];
-          const status = pick === match.winner ? "correct" : "wrong";
-          return `<td><span class="pick ${status}">${flag(pick)} ${pick}${status === "correct" ? " <i>✓</i>" : " <i>×</i>"}</span></td>`;
+          return `<td>${pickMarkup(player, state.pickRound, match, matchIndex)}</td>`;
         }).join("")}
       </tr>
     `;
@@ -224,29 +302,34 @@ function picksView() {
 
   return `
     <section class="page-intro picks-intro">
-      <div><p class="eyebrow"><span></span> Player picks</p><h1>All picks</h1><p>Compare each entry across the bracket.</p></div>
+      <div><p class="eyebrow"><span></span> Player picks</p><h1>All picks</h1><p>Every saved prediction, round by round.</p></div>
     </section>
     <div class="player-filter" role="group" aria-label="Filter by entry">
       <button class="${state.selectedPlayer === "all" ? "active" : ""}" data-player="all">Everyone</button>
       ${playerOptions}
     </div>
-    <section class="picks-table-wrap">
-      <table class="picks-table">
-        <thead>
-          <tr>
-            <th>Match</th>
-            ${players.map((player) => `<th><span class="avatar">${initials(player.name)}</span><strong>${player.name}</strong><small>${playerScore(player)} pts</small></th>`).join("")}
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </section>
-    <section class="champion-strip">
-      <div><p class="section-kicker">The long game</p><h2>Finals predictions</h2></div>
-      <div class="champion-grid">
-        ${poolData.players.map((player) => `<div><span>${initials(player.name)}</span><p><small>${player.name}</small><strong>${flag(player.champion)} ${player.champion} <i>over</i> ${player.finalist ? `${flag(player.finalist)} ${player.finalist}` : "—"}</strong></p></div>`).join("")}
+    ${selectedPlayer ? playerPicksProfile(selectedPlayer) : `
+      <div class="round-filter" role="group" aria-label="Choose bracket round">
+        ${pickRounds.map((round) => `<button class="${state.pickRound === round.key ? "active" : ""}" data-pick-round="${round.key}">${round.label}</button>`).join("")}
       </div>
-    </section>
+      <section class="picks-table-wrap">
+        <table class="picks-table">
+          <thead>
+            <tr>
+              <th>Match</th>
+              ${players.map((player) => `<th><span class="avatar">${initials(player.name)}</span><strong>${player.name}</strong><small>${playerScore(player)} pts</small></th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </section>
+      <section class="champion-strip">
+        <div><p class="section-kicker">Final predictions</p><h2>Championship picks</h2></div>
+        <div class="champion-grid">
+          ${poolData.players.map((player) => `<div><span>${initials(player.name)}</span><p><small>${player.name}</small><strong>${flag(player.champion)} ${player.champion} <i>over</i> ${player.finalist ? `${flag(player.finalist)} ${player.finalist}` : "—"}</strong></p></div>`).join("")}
+        </div>
+      </section>
+    `}
   `;
 }
 
@@ -263,6 +346,7 @@ document.addEventListener("click", (event) => {
   const goto = event.target.closest("[data-goto]");
   const filter = event.target.closest("[data-filter]");
   const player = event.target.closest("[data-player]");
+  const pickRound = event.target.closest("[data-pick-round]");
 
   if (nav || goto) {
     state.view = (nav || goto).dataset.view || (nav || goto).dataset.goto;
@@ -270,7 +354,8 @@ document.addEventListener("click", (event) => {
   }
   if (filter) state.matchFilter = filter.dataset.filter;
   if (player) state.selectedPlayer = player.dataset.player;
-  if (nav || goto || filter || player) render();
+  if (pickRound) state.pickRound = pickRound.dataset.pickRound;
+  if (nav || goto || filter || player || pickRound) render();
 });
 
 render();

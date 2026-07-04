@@ -36,6 +36,70 @@ export const poolData = {
     { id: "r32-16", round: "Round of 32", points: 1, date: "2026-07-03", fixture: "Colombia vs Ghana", winner: "Colombia", status: "final" },
   ],
 
+  laterRoundMatches: [
+    { id: "match-89", roundKey: "roundOf16", round: "Round of 16", fixture: "Paraguay vs France", points: 2, winner: null },
+    { id: "match-90", roundKey: "roundOf16", round: "Round of 16", fixture: "Canada vs Morocco", points: 2, winner: null },
+    { id: "match-93", roundKey: "roundOf16", round: "Round of 16", fixture: "Portugal vs Spain", points: 2, winner: null },
+    { id: "match-94", roundKey: "roundOf16", round: "Round of 16", fixture: "United States vs Belgium", points: 2, winner: null },
+    { id: "match-91", roundKey: "roundOf16", round: "Round of 16", fixture: "Brazil vs Norway", points: 2, winner: null },
+    { id: "match-92", roundKey: "roundOf16", round: "Round of 16", fixture: "Mexico vs England", points: 2, winner: null },
+    { id: "match-95", roundKey: "roundOf16", round: "Round of 16", fixture: "Argentina vs Egypt", points: 2, winner: null },
+    { id: "match-96", roundKey: "roundOf16", round: "Round of 16", fixture: "Switzerland vs Colombia", points: 2, winner: null },
+    { id: "match-97", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 89 vs Winner 90", points: 3, winner: null },
+    { id: "match-98", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 93 vs Winner 94", points: 3, winner: null },
+    { id: "match-99", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 91 vs Winner 92", points: 3, winner: null },
+    { id: "match-100", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 95 vs Winner 96", points: 3, winner: null },
+    { id: "match-101", roundKey: "semifinals", round: "Semifinals", fixture: "Winner 97 vs Winner 98", points: 4, winner: null },
+    { id: "match-102", roundKey: "semifinals", round: "Semifinals", fixture: "Winner 99 vs Winner 100", points: 4, winner: null },
+    { id: "match-103", roundKey: "thirdPlace", round: "Third Place", fixture: "Semifinal runners-up", points: 3, winner: null },
+    { id: "match-104", roundKey: "final", round: "Final", fixture: "Semifinal winners", points: 5, winner: null },
+  ],
+
+  laterRoundPicks: {
+    John: {
+      roundOf16: { "match-89": "France", "match-90": "Netherlands", "match-93": "Spain", "match-94": "United States", "match-91": "Norway", "match-92": "England", "match-95": "Argentina", "match-96": "Colombia" },
+      quarterfinals: { "match-97": "France", "match-98": "United States", "match-99": "England", "match-100": "Colombia" },
+      semifinals: { "match-101": "France", "match-102": "England" },
+      final: { "match-104": "France", runnerUp: "England", champion: "France" },
+      thirdPlace: { "match-103": "United States", runnerUp: "Colombia" },
+    },
+    Henry: {
+      roundOf16: { "match-89": "France", "match-90": "Morocco", "match-93": "Spain", "match-94": "United States", "match-91": "Brazil", "match-92": "England", "match-95": "Argentina", "match-96": "Colombia" },
+      quarterfinals: { "match-97": "France", "match-98": "Spain", "match-99": "England", "match-100": "Argentina" },
+      semifinals: { "match-101": "France", "match-102": "Argentina" },
+      final: { "match-104": "France", runnerUp: "Argentina", champion: "France" },
+      thirdPlace: { "match-103": "Spain", runnerUp: "England" },
+    },
+    Louisa: {
+      roundOf16: { "match-89": "France", "match-90": "Morocco", "match-93": "Portugal", "match-94": "United States", "match-91": "Brazil", "match-92": "England", "match-95": "Argentina", "match-96": "Colombia" },
+      quarterfinals: { "match-97": "France", "match-98": "Portugal", "match-99": "Brazil", "match-100": "Colombia" },
+      semifinals: { "match-101": "France", "match-102": "Brazil" },
+      final: { "match-104": "France", runnerUp: "Brazil", champion: "France" },
+      thirdPlace: { "match-103": null, runnerUp: null, note: "Not clearly visible on Louisa's image" },
+    },
+    Lawrence: {
+      roundOf16: { "match-89": "France", "match-90": "Netherlands", "match-93": "Spain", "match-94": "Belgium", "match-91": "Japan", "match-92": "Mexico", "match-95": "Argentina", "match-96": "Colombia" },
+      quarterfinals: { "match-97": "France", "match-98": "Spain", "match-99": "Mexico", "match-100": "Argentina" },
+      semifinals: { "match-101": "France", "match-102": "Argentina" },
+      final: { "match-104": "France", runnerUp: "Argentina", champion: "France" },
+      thirdPlace: { "match-103": "Spain", runnerUp: "Mexico" },
+    },
+    Julie: {
+      roundOf16: { "match-89": "France", "match-90": "Netherlands", "match-93": "Spain", "match-94": "United States", "match-91": "Norway", "match-92": "England", "match-95": "Argentina", "match-96": "Colombia" },
+      quarterfinals: { "match-97": "France", "match-98": "Spain", "match-99": "England", "match-100": "Argentina" },
+      semifinals: { "match-101": "France", "match-102": "Argentina" },
+      final: { "match-104": "France", runnerUp: "Argentina", champion: "France" },
+      thirdPlace: { "match-103": "England", runnerUp: "Spain" },
+    },
+    "Otis & Tyler": {
+      roundOf16: { "match-89": "France", "match-90": "Netherlands", "match-93": "Croatia", "match-94": "Senegal", "match-91": "Brazil", "match-92": "England", "match-95": "Argentina", "match-96": "Colombia" },
+      quarterfinals: { "match-97": "France", "match-98": "Croatia", "match-99": "England", "match-100": "Argentina" },
+      semifinals: { "match-101": "France", "match-102": "Argentina" },
+      final: { "match-104": "France", runnerUp: "Argentina", champion: "France" },
+      thirdPlace: { "match-103": "England", runnerUp: "Croatia" },
+    },
+  },
+
   players: [
     {
       name: "Henry",
@@ -46,7 +110,7 @@ export const poolData = {
     {
       name: "Louisa",
       champion: "France",
-      finalist: null,
+      finalist: "Brazil",
       roundOf32Picks: ["Germany", "France", "Canada", "Morocco", "Portugal", "Spain", "United States", "Belgium", "Brazil", "Norway", "Mexico", "England", "Argentina", "Egypt", "Algeria", "Colombia"],
     },
     {
