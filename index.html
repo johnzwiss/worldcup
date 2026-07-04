@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#081c19" />
+    <meta
+      name="description"
+      content="A private World Cup 2026 bracket pool tracker."
+    />
+    <title>World Cup Bracket Pool</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="World Cup Bracket Pool home">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span>
+            <strong>WORLD CUP</strong>
+            <small>BRACKET POOL · 2026</small>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Primary navigation">
+          <button class="nav-link active" data-view="overview">Overview</button>
+          <button class="nav-link" data-view="matches">Match center</button>
+          <button class="nav-link" data-view="picks">All picks</button>
+        </nav>
+
+        <div class="header-status">
+          <span class="status-dot"></span>
+          <span><strong>15</strong> of 16 final</span>
+        </div>
+      </header>
+
+      <main id="app" tabindex="-1"></main>
+
+      <footer class="site-footer">
+        <span>World Cup Bracket Pool</span>
+        <span>Last updated <time datetime="2026-07-03">July 3, 2026</time></span>
+      </footer>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
