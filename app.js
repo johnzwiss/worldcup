@@ -5,7 +5,6 @@ const navButtons = [...document.querySelectorAll(".nav-link")];
 
 const state = {
   view: "overview",
-  scenario: "current",
   matchFilter: "all",
   selectedPlayer: "all",
 };
@@ -39,10 +38,7 @@ function formatDate(dateString, full = false) {
 }
 
 function resultFor(match) {
-  if (match.status === "final") return match.winner;
-  if (state.scenario === "colombia") return "Colombia";
-  if (state.scenario === "ghana") return "Ghana";
-  return null;
+  return match.status === "final" ? match.winner : null;
 }
 
 function playerScore(player) {
@@ -63,42 +59,29 @@ function leaderboard() {
 }
 
 function scenarioLabel() {
-  return {
-    current: "Current standings",
-    colombia: "If Colombia wins",
-    ghana: "If Ghana wins",
-  }[state.scenario];
-}
-
-function scenarioControl() {
-  return `
-    <div class="scenario-control" role="group" aria-label="Leaderboard scenario">
-      <button class="${state.scenario === "current" ? "active" : ""}" data-scenario="current">Current</button>
-      <button class="${state.scenario === "colombia" ? "active" : ""}" data-scenario="colombia">Colombia wins</button>
-      <button class="${state.scenario === "ghana" ? "active" : ""}" data-scenario="ghana">Ghana wins</button>
-    </div>
-  `;
+  return "Current standings";
 }
 
 function hero() {
   return `
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> Cape Verde crew · Round of 32</p>
-        <h1>Island pride.<br><em>Bracket pressure.</em></h1>
-        <p>Six entries in shark-infested waters. See where everyone stands before the knockout points start climbing.</p>
+        <p class="eyebrow"><span></span> The Shark Pool · Round of 32 complete</p>
+        <h1>There’s blood<br><em>in the water.</em></h1>
+        <p>Six entries. One leaderboard. Nobody wants to be chum when the knockout points start climbing.</p>
       </div>
       <div class="hero-sharks" aria-hidden="true">
         <svg viewBox="0 0 560 240" role="presentation">
           <path d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
-          <path class="small-shark" d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
+          <path class="small-shark" transform="translate(250 110) scale(.42)" d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
+          <path class="tiny-shark" transform="translate(-80 135) scale(.28)" d="M500 108c-50-24-103-35-160-32l39-39-61 38c-35 1-69 6-102 16l-39-37 10 49c-43 16-79 36-116 53l-54-24 31 36-36 31 64-25c52 25 116 31 182 17l-35 30 73-41c69-4 137-28 204-72Z" />
           <circle cx="480" cy="55" r="5" /><circle cx="510" cy="32" r="3" /><circle cx="532" cy="58" r="2" />
         </svg>
       </div>
       <div class="hero-stats" aria-label="Pool summary">
         <div><strong>6</strong><span>Entries</span></div>
-        <div><strong>15</strong><span>Matches final</span></div>
-        <div><strong>1</strong><span>Match pending</span></div>
+        <div><strong>16</strong><span>Matches final</span></div>
+        <div><strong>✓</strong><span>Round locked</span></div>
       </div>
     </section>
   `;
@@ -128,10 +111,9 @@ function leaderboardPanel() {
     <section class="panel leaderboard-panel">
       <div class="panel-heading leaderboard-heading">
         <div>
-          <p class="section-kicker">The table</p>
+          <p class="section-kicker">Feeding order</p>
           <h2>${scenarioLabel()}</h2>
         </div>
-        ${scenarioControl()}
       </div>
       <div class="leaderboard">${rows}</div>
       <button class="text-link" data-goto="picks">Compare everyone’s picks <span>→</span></button>
@@ -139,34 +121,22 @@ function leaderboardPanel() {
   `;
 }
 
-function liveMatchPanel() {
-  const match = poolData.matches.find((item) => item.status === "pending");
-  const [home, away] = match.fixture.split(" vs ");
+function roundCompletePanel() {
   return `
-    <section class="live-card">
+    <section class="live-card round-complete-card">
       <div class="live-card-top">
-        <span class="live-pill"><i></i> Shark watch · Live snapshot</span>
-        <span>${formatDate(match.date)} · Round of 32</span>
+        <span class="live-pill"><i></i> Waters settled</span>
+        <span>Round of 32</span>
       </div>
-      <div class="matchup">
-        <div class="team">
-          ${flag(home, "flag-large")}
-          <strong>${home}</strong>
-        </div>
-        <div class="scoreboard">
-          <strong>1 <span>–</span> 0</strong>
-          <small>NOT FINAL</small>
-        </div>
-        <div class="team">
-          ${flag(away, "flag-large")}
-          <strong>${away}</strong>
-        </div>
+      <div class="round-lock">
+        <strong>16<small>/16</small></strong>
+        <div><h3>Round locked.</h3><p>Colombia advances. Every score is updated.</p></div>
       </div>
       <div class="consensus">
         <div class="mini-avatars">
           ${poolData.players.map((player) => `<span title="${player.name}">${initials(player.name)}</span>`).join("")}
         </div>
-        <p><strong>Clean sweep.</strong> All 6 entries picked Colombia.</p>
+        <p><strong>Clean sweep.</strong> All 6 entries backed Colombia.</p>
       </div>
     </section>
   `;
@@ -185,8 +155,8 @@ function scoringPanel() {
     <section class="panel scoring-panel">
       <div class="panel-heading">
         <div>
-          <p class="section-kicker">How it works</p>
-          <h2>Points get serious</h2>
+          <p class="section-kicker">Bite value</p>
+          <h2>The bites get bigger</h2>
         </div>
       </div>
       <div class="scoring-steps">
@@ -208,13 +178,13 @@ function overviewView() {
     <div class="dashboard-grid">
       ${leaderboardPanel()}
       <div class="side-stack">
-        ${liveMatchPanel()}
+        ${roundCompletePanel()}
         ${scoringPanel()}
       </div>
     </div>
     <section class="callout">
       <span class="callout-icon">i</span>
-      <div><strong>Next update</strong><p>Standings lock when Colombia vs Ghana goes final. The Round of 16 is worth 2 points per correct pick.</p></div>
+      <div><strong>Next feeding</strong><p>The Round of 16 is up next and worth 2 points per correct pick.</p></div>
     </section>
   `;
 }
@@ -251,9 +221,9 @@ function matchesView() {
 
   return `
     <section class="page-intro">
-      <div><p class="eyebrow"><span></span> Round of 32</p><h1>Match center</h1><p>Every result, plus how the room picked it.</p></div>
+      <div><p class="eyebrow"><span></span> Shark watch · Round of 32</p><h1>Match center</h1><p>Every result, plus how the room picked it.</p></div>
       <div class="filter-control" role="group" aria-label="Filter matches">
-        ${["all", "final", "pending"].map((filter) => `<button class="${state.matchFilter === filter ? "active" : ""}" data-filter="${filter}">${filter[0].toUpperCase() + filter.slice(1)}</button>`).join("")}
+        ${["all", "final"].map((filter) => `<button class="${state.matchFilter === filter ? "active" : ""}" data-filter="${filter}">${filter[0].toUpperCase() + filter.slice(1)}</button>`).join("")}
       </div>
     </section>
     <div class="matches-grid">${cards}</div>
@@ -285,7 +255,6 @@ function picksView() {
   return `
     <section class="page-intro picks-intro">
       <div><p class="eyebrow"><span></span> Head to head</p><h1>All picks</h1><p>Correct picks are green. Misses are red. Simple, brutal, beautiful.</p></div>
-      ${scenarioControl()}
     </section>
     <div class="player-filter" role="group" aria-label="Filter by entry">
       <button class="${state.selectedPlayer === "all" ? "active" : ""}" data-player="all">Everyone</button>
@@ -322,7 +291,6 @@ function render() {
 document.addEventListener("click", (event) => {
   const nav = event.target.closest("[data-view]");
   const goto = event.target.closest("[data-goto]");
-  const scenario = event.target.closest("[data-scenario]");
   const filter = event.target.closest("[data-filter]");
   const player = event.target.closest("[data-player]");
 
@@ -330,10 +298,9 @@ document.addEventListener("click", (event) => {
     state.view = (nav || goto).dataset.view || (nav || goto).dataset.goto;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  if (scenario) state.scenario = scenario.dataset.scenario;
   if (filter) state.matchFilter = filter.dataset.filter;
   if (player) state.selectedPlayer = player.dataset.player;
-  if (nav || goto || scenario || filter || player) render();
+  if (nav || goto || filter || player) render();
 });
 
 render();

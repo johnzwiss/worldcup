@@ -13,9 +13,9 @@ export const poolData = {
 
   notes: [
     "Otis & Tyler are now scored straight up with the rest of the group.",
-    "Colombia vs Ghana is the only pending Round of 32 match in this data.",
-    "At the time of scoring, Colombia was leading Ghana 1–0 live, but not final.",
-    "Everyone picked Colombia, so if Colombia wins everyone gains +1. If Ghana wins nobody gains a point.",
+    "The Round of 32 is complete.",
+    "Colombia is recorded as the winner over Ghana.",
+    "Everyone picked Colombia and received 1 point.",
   ],
 
   matches: [
@@ -34,7 +34,7 @@ export const poolData = {
     { id: "r32-13", round: "Round of 32", points: 1, date: "2026-07-03", fixture: "Argentina vs Cape Verde", winner: "Argentina", status: "final" },
     { id: "r32-14", round: "Round of 32", points: 1, date: "2026-07-03", fixture: "Australia vs Egypt", winner: "Egypt", status: "final" },
     { id: "r32-15", round: "Round of 32", points: 1, date: "2026-07-02", fixture: "Switzerland vs Algeria", winner: "Switzerland", status: "final" },
-    { id: "r32-16", round: "Round of 32", points: 1, date: "2026-07-03", fixture: "Colombia vs Ghana", winner: null, status: "pending" },
+    { id: "r32-16", round: "Round of 32", points: 1, date: "2026-07-03", fixture: "Colombia vs Ghana", winner: "Colombia", status: "final" },
   ],
 
   players: [
