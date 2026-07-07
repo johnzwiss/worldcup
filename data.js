@@ -1,6 +1,6 @@
 export const poolData = {
   title: "World Cup Bracket Pool",
-  lastUpdated: "2026-07-03",
+  lastUpdated: "2026-07-07",
 
   scoring: {
     roundOf32: 1,
@@ -14,7 +14,8 @@ export const poolData = {
   notes: [
     "Otis & Tyler are now scored straight up with the rest of the group.",
     "The Round of 32 is complete.",
-    "All recorded Round of 32 results are final.",
+    "The Round of 16 is complete.",
+    "Quarterfinal picks are now the active round.",
   ],
 
   matches: [
@@ -37,18 +38,18 @@ export const poolData = {
   ],
 
   laterRoundMatches: [
-    { id: "match-89", roundKey: "roundOf16", round: "Round of 16", fixture: "Paraguay vs France", points: 2, winner: null },
-    { id: "match-90", roundKey: "roundOf16", round: "Round of 16", fixture: "Canada vs Morocco", points: 2, winner: null },
-    { id: "match-93", roundKey: "roundOf16", round: "Round of 16", fixture: "Portugal vs Spain", points: 2, winner: null },
-    { id: "match-94", roundKey: "roundOf16", round: "Round of 16", fixture: "United States vs Belgium", points: 2, winner: null },
-    { id: "match-91", roundKey: "roundOf16", round: "Round of 16", fixture: "Brazil vs Norway", points: 2, winner: null },
-    { id: "match-92", roundKey: "roundOf16", round: "Round of 16", fixture: "Mexico vs England", points: 2, winner: null },
-    { id: "match-95", roundKey: "roundOf16", round: "Round of 16", fixture: "Argentina vs Egypt", points: 2, winner: null },
-    { id: "match-96", roundKey: "roundOf16", round: "Round of 16", fixture: "Switzerland vs Colombia", points: 2, winner: null },
-    { id: "match-97", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 89 vs Winner 90", points: 3, winner: null },
-    { id: "match-98", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 93 vs Winner 94", points: 3, winner: null },
-    { id: "match-99", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 91 vs Winner 92", points: 3, winner: null },
-    { id: "match-100", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Winner 95 vs Winner 96", points: 3, winner: null },
+    { id: "match-89", roundKey: "roundOf16", round: "Round of 16", fixture: "Paraguay vs France", points: 2, winner: "France" },
+    { id: "match-90", roundKey: "roundOf16", round: "Round of 16", fixture: "Canada vs Morocco", points: 2, winner: "Morocco" },
+    { id: "match-93", roundKey: "roundOf16", round: "Round of 16", fixture: "Portugal vs Spain", points: 2, winner: "Spain" },
+    { id: "match-94", roundKey: "roundOf16", round: "Round of 16", fixture: "United States vs Belgium", points: 2, winner: "Belgium" },
+    { id: "match-91", roundKey: "roundOf16", round: "Round of 16", fixture: "Brazil vs Norway", points: 2, winner: "Norway" },
+    { id: "match-92", roundKey: "roundOf16", round: "Round of 16", fixture: "Mexico vs England", points: 2, winner: "England" },
+    { id: "match-95", roundKey: "roundOf16", round: "Round of 16", fixture: "Argentina vs Egypt", points: 2, winner: "Argentina" },
+    { id: "match-96", roundKey: "roundOf16", round: "Round of 16", fixture: "Switzerland vs Colombia", points: 2, winner: "Switzerland" },
+    { id: "match-97", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "France vs Morocco", points: 3, winner: null },
+    { id: "match-98", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Spain vs Belgium", points: 3, winner: null },
+    { id: "match-99", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Norway vs England", points: 3, winner: null },
+    { id: "match-100", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Argentina vs Switzerland", points: 3, winner: null },
     { id: "match-101", roundKey: "semifinals", round: "Semifinals", fixture: "Winner 97 vs Winner 98", points: 4, winner: null },
     { id: "match-102", roundKey: "semifinals", round: "Semifinals", fixture: "Winner 99 vs Winner 100", points: 4, winner: null },
     { id: "match-103", roundKey: "thirdPlace", round: "Third Place", fixture: "Semifinal runners-up", points: 3, winner: null },

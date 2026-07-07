@@ -1,4 +1,4 @@
-import { poolData } from "./data.js?v=20260703-5";
+import { poolData } from "./data.js?v=20260707-1";
 
 const app = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".nav-link")];
@@ -7,7 +7,7 @@ const state = {
   view: "overview",
   matchFilter: "all",
   selectedPlayer: "all",
-  pickRound: "roundOf16",
+  pickRound: "quarterfinals",
 };
 
 const pickRounds = [
@@ -30,6 +30,21 @@ const flagCodes = {
 };
 
 const initials = (name) => name.split(/\s+|\s*&\s*/).filter((part) => !["&"].includes(part)).map((part) => part[0]).slice(0, 2).join("");
+
+function completedLaterMatches() {
+  return poolData.laterRoundMatches.filter((match) => match.winner);
+}
+
+function completedMatchCount() {
+  return poolData.matches.length + completedLaterMatches().length;
+}
+
+function completedMatches() {
+  return [
+    ...poolData.matches.map((match, matchIndex) => ({ ...match, roundKey: "roundOf32", matchIndex })),
+    ...completedLaterMatches().map((match) => ({ ...match, matchIndex: null })),
+  ];
+}
 
 function flag(country, className = "") {
   const code = flagCodes[country];
@@ -59,13 +74,17 @@ function playerScore(player) {
 }
 
 function leaderboard() {
-  return poolData.players
+  const sortedPlayers = poolData.players
     .map((player) => ({ ...player, score: playerScore(player) }))
-    .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
-    .map((player, index, players) => ({
-      ...player,
-      rank: index > 0 && player.score === players[index - 1].score ? players[index - 1].rank : index + 1,
-    }));
+    .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+  let previousScore = null;
+  let previousRank = 0;
+  return sortedPlayers.map((player, index) => {
+    const rank = player.score === previousScore ? previousRank : index + 1;
+    previousScore = player.score;
+    previousRank = rank;
+    return { ...player, rank };
+  });
 }
 
 function scenarioLabel() {
@@ -88,8 +107,8 @@ function hero() {
       </div>
       <div class="hero-stats" aria-label="Pool summary">
         <div><strong>6</strong><span>Entries</span></div>
-        <div><strong>16</strong><span>Matches final</span></div>
-        <div><strong>✓</strong><span>Round locked</span></div>
+        <div><strong>${completedMatchCount()}</strong><span>Matches final</span></div>
+        <div><strong>3</strong><span>QF points</span></div>
       </div>
     </section>
   `;
@@ -148,7 +167,7 @@ function scoringPanel() {
       </div>
       <div class="scoring-steps">
         ${Object.entries(poolData.scoring).map(([round, points], index) => `
-          <div class="scoring-step ${index === 1 ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
+          <div class="scoring-step ${round === "quarterfinal" ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
             <span>${labels[round]}</span>
             <strong>${round === "thirdPlace" ? "+" : ""}${points}</strong>
             <small>${points === 1 ? "point" : "points"}</small>
@@ -160,6 +179,9 @@ function scoringPanel() {
 }
 
 function overviewView() {
+  const quarterfinals = matchesForPickRound("quarterfinals")
+    .map((match) => match.fixture.replace(" vs ", "–"))
+    .join(" · ");
   return `
     ${hero()}
     <div class="dashboard-grid">
@@ -170,23 +192,29 @@ function overviewView() {
     </div>
     <section class="callout">
       <span class="callout-icon">i</span>
-      <div><strong>Up next</strong><p>The Round of 16 is worth 2 points per correct pick.</p></div>
+      <div><strong>Quarterfinals set</strong><p>${quarterfinals}. Correct quarterfinal picks are worth 3 points.</p></div>
     </section>
   `;
 }
 
 function matchesView() {
-  const visibleMatches = poolData.matches.filter((match) => state.matchFilter === "all" || match.status === state.matchFilter);
+  const matchFilters = [
+    { key: "all", label: "All results" },
+    { key: "roundOf32", label: "Round of 32" },
+    { key: "roundOf16", label: "Round of 16" },
+  ];
+  const visibleMatches = completedMatches().filter((match) => state.matchFilter === "all" || match.roundKey === state.matchFilter);
   const cards = visibleMatches.map((match, index) => {
     const [home, away] = match.fixture.split(" vs ");
-    const picksForHome = poolData.players.filter((player) => player.roundOf32Picks[poolData.matches.indexOf(match)] === home).length;
-    const picksForAway = poolData.players.length - picksForHome;
+    const picksForHome = poolData.players.filter((player) => playerPickForMatch(player, match) === home).length;
+    const picksForAway = poolData.players.filter((player) => playerPickForMatch(player, match) === away).length;
+    const pickedFixtureTotal = Math.max(picksForHome + picksForAway, 1);
     const homeWon = match.winner === home;
     const awayWon = match.winner === away;
     return `
       <article class="match-card" style="--delay:${index * 25}ms">
         <div class="match-meta">
-          <span>${formatDate(match.date)}</span>
+          <span>${match.date ? formatDate(match.date) : match.round}</span>
           <span class="match-status final">Final</span>
         </div>
         <div class="match-team ${homeWon ? "winner" : ""}">
@@ -198,7 +226,7 @@ function matchesView() {
           <strong>${picksForAway}<small>/6</small></strong>
         </div>
         <div class="pick-bar" aria-label="${picksForHome} picks for ${home}, ${picksForAway} picks for ${away}">
-          <span style="width:${picksForHome / 6 * 100}%"></span>
+          <span style="width:${picksForHome / pickedFixtureTotal * 100}%"></span>
         </div>
         <p class="match-foot">${flag(match.winner)} ${match.winner} advances</p>
       </article>
@@ -207,9 +235,9 @@ function matchesView() {
 
   return `
     <section class="page-intro">
-      <div><p class="eyebrow"><span></span> Round of 32</p><h1>Match center</h1><p>Results and picks for every match.</p></div>
+      <div><p class="eyebrow"><span></span> Completed matches</p><h1>Match center</h1><p>Results and picks for every finished round.</p></div>
       <div class="filter-control" role="group" aria-label="Filter matches">
-        ${["all", "final"].map((filter) => `<button class="${state.matchFilter === filter ? "active" : ""}" data-filter="${filter}">${filter[0].toUpperCase() + filter.slice(1)}</button>`).join("")}
+        ${matchFilters.map((filter) => `<button class="${state.matchFilter === filter.key ? "active" : ""}" data-filter="${filter.key}">${filter.label}</button>`).join("")}
       </div>
     </section>
     <div class="matches-grid">${cards}</div>
@@ -220,6 +248,13 @@ function matchesForPickRound(roundKey) {
   return roundKey === "roundOf32"
     ? poolData.matches
     : poolData.laterRoundMatches.filter((match) => match.roundKey === roundKey);
+}
+
+function playerPickForMatch(player, match) {
+  if (match.roundKey === "roundOf32") {
+    return player.roundOf32Picks[match.matchIndex];
+  }
+  return poolData.laterRoundPicks[player.name]?.[match.roundKey]?.[match.id];
 }
 
 function pickMarkup(player, roundKey, match, matchIndex) {
@@ -235,10 +270,12 @@ function pickMarkup(player, roundKey, match, matchIndex) {
   if (!pick) {
     return `<span class="pick saved pick-empty" title="${roundPicks?.note || "Not provided"}">Not provided</span>`;
   }
+  const status = match.winner ? (pick === match.winner ? "correct" : "wrong") : "saved";
+  const indicator = match.winner ? (status === "correct" ? " <i>✓</i>" : " <i>×</i>") : "";
   if ((roundKey === "final" || roundKey === "thirdPlace") && runnerUp) {
-    return `<span class="pick saved pick-pair"><span>${flag(pick)} ${pick}</span><small>over ${flag(runnerUp)} ${runnerUp}</small></span>`;
+    return `<span class="pick ${status} pick-pair"><span>${flag(pick)} ${pick}${indicator}</span><small>over ${flag(runnerUp)} ${runnerUp}</small></span>`;
   }
-  return `<span class="pick saved">${flag(pick)} ${pick}</span>`;
+  return `<span class="pick ${status}">${flag(pick)} ${pick}${indicator}</span>`;
 }
 
 function playerPicksProfile(player) {
