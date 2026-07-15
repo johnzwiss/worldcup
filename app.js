@@ -1,4 +1,4 @@
-import { poolData } from "./data.js?v=20260707-1";
+import { poolData } from "./data.js?v=20260715-1";
 
 const app = document.querySelector("#app");
 const navButtons = [...document.querySelectorAll(".nav-link")];
@@ -7,7 +7,7 @@ const state = {
   view: "overview",
   matchFilter: "all",
   selectedPlayer: "all",
-  pickRound: "quarterfinals",
+  pickRound: "semifinals",
 };
 
 const pickRounds = [
@@ -108,7 +108,7 @@ function hero() {
       <div class="hero-stats" aria-label="Pool summary">
         <div><strong>6</strong><span>Entries</span></div>
         <div><strong>${completedMatchCount()}</strong><span>Matches final</span></div>
-        <div><strong>3</strong><span>QF points</span></div>
+        <div><strong>4</strong><span>SF points</span></div>
       </div>
     </section>
   `;
@@ -167,7 +167,7 @@ function scoringPanel() {
       </div>
       <div class="scoring-steps">
         ${Object.entries(poolData.scoring).map(([round, points], index) => `
-          <div class="scoring-step ${round === "quarterfinal" ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
+          <div class="scoring-step ${round === "semifinal" ? "current" : ""} ${round === "thirdPlace" ? "bonus" : ""}">
             <span>${labels[round]}</span>
             <strong>${round === "thirdPlace" ? "+" : ""}${points}</strong>
             <small>${points === 1 ? "point" : "points"}</small>
@@ -179,9 +179,9 @@ function scoringPanel() {
 }
 
 function overviewView() {
-  const quarterfinals = matchesForPickRound("quarterfinals")
-    .map((match) => match.fixture.replace(" vs ", "–"))
-    .join(" · ");
+  const semifinalToGo = matchesForPickRound("semifinals")
+    .find((match) => !match.winner)
+    ?.fixture.replace(" vs ", "–");
   return `
     ${hero()}
     <div class="dashboard-grid">
@@ -192,7 +192,7 @@ function overviewView() {
     </div>
     <section class="callout">
       <span class="callout-icon">i</span>
-      <div><strong>Quarterfinals set</strong><p>${quarterfinals}. Correct quarterfinal picks are worth 3 points.</p></div>
+      <div><strong>Semifinals halfway</strong><p>Spain is in the final. ${semifinalToGo} decides the other finalist, and semifinal picks are worth 4 points.</p></div>
     </section>
   `;
 }
@@ -202,6 +202,8 @@ function matchesView() {
     { key: "all", label: "All results" },
     { key: "roundOf32", label: "Round of 32" },
     { key: "roundOf16", label: "Round of 16" },
+    { key: "quarterfinals", label: "Quarterfinals" },
+    { key: "semifinals", label: "Semifinals" },
   ];
   const visibleMatches = completedMatches().filter((match) => state.matchFilter === "all" || match.roundKey === state.matchFilter);
   const cards = visibleMatches.map((match, index) => {
@@ -228,7 +230,7 @@ function matchesView() {
         <div class="pick-bar" aria-label="${picksForHome} picks for ${home}, ${picksForAway} picks for ${away}">
           <span style="width:${picksForHome / pickedFixtureTotal * 100}%"></span>
         </div>
-        <p class="match-foot">${flag(match.winner)} ${match.winner} advances</p>
+        <p class="match-foot">${flag(match.winner)} <span>${match.winner} advances${match.score ? ` · ${match.score}` : ""}</span></p>
       </article>
     `;
   }).join("");

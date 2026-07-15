@@ -1,6 +1,6 @@
 export const poolData = {
   title: "World Cup Bracket Pool",
-  lastUpdated: "2026-07-07",
+  lastUpdated: "2026-07-15",
 
   scoring: {
     roundOf32: 1,
@@ -15,7 +15,9 @@ export const poolData = {
     "Otis & Tyler are now scored straight up with the rest of the group.",
     "The Round of 32 is complete.",
     "The Round of 16 is complete.",
-    "Quarterfinal picks are now the active round.",
+    "The quarterfinals are complete.",
+    "Spain is through to the final.",
+    "The second semifinal is the active match.",
   ],
 
   matches: [
@@ -46,14 +48,14 @@ export const poolData = {
     { id: "match-92", roundKey: "roundOf16", round: "Round of 16", fixture: "Mexico vs England", points: 2, winner: "England" },
     { id: "match-95", roundKey: "roundOf16", round: "Round of 16", fixture: "Argentina vs Egypt", points: 2, winner: "Argentina" },
     { id: "match-96", roundKey: "roundOf16", round: "Round of 16", fixture: "Switzerland vs Colombia", points: 2, winner: "Switzerland" },
-    { id: "match-97", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "France vs Morocco", points: 3, winner: null },
-    { id: "match-98", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Spain vs Belgium", points: 3, winner: null },
-    { id: "match-99", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Norway vs England", points: 3, winner: null },
-    { id: "match-100", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Argentina vs Switzerland", points: 3, winner: null },
-    { id: "match-101", roundKey: "semifinals", round: "Semifinals", fixture: "Winner 97 vs Winner 98", points: 4, winner: null },
-    { id: "match-102", roundKey: "semifinals", round: "Semifinals", fixture: "Winner 99 vs Winner 100", points: 4, winner: null },
-    { id: "match-103", roundKey: "thirdPlace", round: "Third Place", fixture: "Semifinal runners-up", points: 3, winner: null },
-    { id: "match-104", roundKey: "final", round: "Final", fixture: "Semifinal winners", points: 5, winner: null },
+    { id: "match-97", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "France vs Morocco", points: 3, winner: "France", score: "France 2–0 Morocco" },
+    { id: "match-98", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Spain vs Belgium", points: 3, winner: "Spain", score: "Spain 2–1 Belgium" },
+    { id: "match-99", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Norway vs England", points: 3, winner: "England", score: "England 2–1 Norway (AET)" },
+    { id: "match-100", roundKey: "quarterfinals", round: "Quarterfinals", fixture: "Argentina vs Switzerland", points: 3, winner: "Argentina", score: "Argentina 3–1 Switzerland" },
+    { id: "match-101", roundKey: "semifinals", round: "Semifinals", fixture: "France vs Spain", points: 4, winner: "Spain", score: "Spain 2–0 France" },
+    { id: "match-102", roundKey: "semifinals", round: "Semifinals", fixture: "England vs Argentina", points: 4, winner: null },
+    { id: "match-103", roundKey: "thirdPlace", round: "Third Place", fixture: "France vs Semifinal 102 runner-up", points: 3, winner: null },
+    { id: "match-104", roundKey: "final", round: "Final", fixture: "Spain vs Semifinal 102 winner", points: 5, winner: null },
   ],
 
   laterRoundPicks: {
